@@ -1,7 +1,9 @@
 from functools import wraps
 from flask import request, Response, Flask
 import paho.mqtt.client as mqtt_client
-import ConfigParser
+import ConfigParser, os.path, sys
+
+config_file = "/config/config.ini"
 
 class MQTT_Helper():
     def __init__(self, client_id='', host='', port=1883, username='', password='', keepalive=30):
@@ -55,11 +57,31 @@ class MQTT_Helper():
         self.client.disconnect()
         self.client.loop_stop()
 
+# create config file if not already done
+if not os.path.exists(config_file):
+    cfgfile = open(config_file,'w')
+    config = ConfigParser.RawConfigParser()
+    config.add_section('web')
+    config.set('web', 'configured', False)
+    config.set('web', 'host', '0.0.0.0')
+    config.set('web', 'port', '5000')
+    config.set('web', 'user', '') # leave both blank for no auth
+    config.set('web', 'pass', '')
+    config.set('web', 'pathprefix', '/xeoma_data_handle') # prefix all requests with this
+    config.set('web', 'debug', False)
+    config.add_section('mqtt')
+    config.set('web', 'host', 'example.com')
+    config.set('web', 'port', '1883')
+    config.set('web', 'client_id', 'xeoma-mqtt-01')
+    config.set('web', 'channel_prefix', 'cameras/')
+    config.write(cfgfile)
+    cfgfile.close()
+    sys.exit("[ERROR] Setup not complete! Update /config/config.ini then set 'configured' under 'web' to False to disable this message.")
+
 config = ConfigParser.ConfigParser()
-config.read("/config/config.ini")
+config.read(config_file)
 if not config.getboolean('web', 'configured'):
-    print("Setup not complete! Edit /config/config.ini and set 'configured' under 'web' to False.")
-    exit(0)
+    sys.exist("[ERROR] Setup not complete! Update /config/config.ini then set 'configured' under 'web' to False to disable this message.")
 
 mqtt = MQTT_Helper(config.get('mqtt', 'client_id'), config.get('mqtt', 'host'), config.get('mqtt', 'port'))
 app = Flask(__name__)

@@ -1,5 +1,5 @@
 FROM phusion/baseimage:0.9.19
-MAINTAINER Skylar Sadlier "skylord123@gmail.com"
+MAINTAINER github.com/skylord123/xeoma-mqtt
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -13,17 +13,14 @@ RUN pip install python-etcd
 RUN pip install flask
 
 VOLUME [ "/config" ]
-COPY config.ini.default /files/
-# setup startup scripts
-COPY 30_default_config_file.sh /etc/my_init.d/
 
 ADD xeoma-mqtt.py /usr/sbin/xeoma-mqtt.py
 
+# add xeoma-mqtt.sh script to run as a service
 RUN mkdir /etc/service/xeoma-mqtt
 ADD xeoma-mqtt.sh /etc/service/xeoma-mqtt/run
 RUN chmod +x /etc/service/xeoma-mqtt/run
 
 EXPOSE 5000
-
 
 #CMD [ "/usr/bin/python", "/usr/sbin/xeoma-mqtt.py" ]
