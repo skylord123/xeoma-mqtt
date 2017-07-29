@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM phusion/baseimage:0.9.19
 MAINTAINER Skylar Sadlier "skylord123@gmail.com"
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -19,6 +19,11 @@ COPY 30_default_config_file.sh /etc/my_init.d/
 
 ADD xeoma-mqtt.py /usr/sbin/xeoma-mqtt.py
 
+RUN mkdir /etc/service/xeoma-mqtt
+ADD xeoma-mqtt.sh /etc/service/xeoma-mqtt/run
+RUN chmod +x /etc/service/xeoma-mqtt/run
+
 EXPOSE 5000
 
-CMD [ "/usr/bin/python", "/usr/sbin/xeoma-mqtt.py" ]
+
+#CMD [ "/usr/bin/python", "/usr/sbin/xeoma-mqtt.py" ]
