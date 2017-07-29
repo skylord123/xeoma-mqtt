@@ -13,7 +13,9 @@ RUN pip install python-etcd
 RUN pip install flask
 
 VOLUME [ "/config" ]
-ADD config.ini /config/config.ini
+COPY config.ini.default /files/
+# setup startup scripts
+COPY 30_default_config_file.sh /etc/my_init.d/
 
 ADD xeoma-mqtt.py /usr/sbin/xeoma-mqtt.py
 
