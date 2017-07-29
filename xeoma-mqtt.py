@@ -46,7 +46,7 @@ class MQTT_Helper():
     def publish(self, channel, message):
         if not self.connected and not self.active:
             self.connect();
-        self.client.publish(channel, message)
+        self.client.publish(channel, payload=message, qos=2, retain=True)
 
     def connect(self):
         self.active = True
