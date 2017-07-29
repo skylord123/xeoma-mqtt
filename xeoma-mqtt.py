@@ -79,10 +79,12 @@ def authenticate():
     {'WWW-Authenticate': 'Basic realm="Login Required"'})
 
 def requires_auth(f):
+    global config
     @wraps(f)
     def decorated(*args, **kwargs):
+        global config
         auth = request.authorization
-        if not auth or not check_auth(auth.username, auth.password):
+        if config.get('web','pass') and config.get('web','pass') and (not auth or not check_auth(auth.username, auth.password)):
             return authenticate()
         return f(*args, **kwargs)
     return decorated
