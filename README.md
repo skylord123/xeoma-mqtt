@@ -1,5 +1,7 @@
 # docker-xeoma
 
+Deprecated, see below.
+
 This is a docker container that runs a webserver that is used to publish MQTT messages. This is so Xeoma's HTTP Request Sender module can be used to send MQTT events that can later be intercepted by something like [Home Assistant](https://home-assistant.io/). The idea in the future is to add support for MQTT messages coming back to Xeoma via the HTTP Switch module in the future. Pull Requests are welcome!
 
 This docker image is available [on Docker Hub](https://hub.docker.com/r/skylord123/xeoma-mqtt).
